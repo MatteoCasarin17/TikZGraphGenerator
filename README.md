@@ -1,6 +1,6 @@
 # TikZ Graph Generator
 
-![Palette Editor](demo/Screencast_Demo_UI.mp4)
+![Palette Editor](demo/Screenshot_Demo_UI.png)
 
 *Overall UI.*
 
