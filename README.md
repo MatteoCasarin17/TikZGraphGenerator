@@ -63,13 +63,13 @@ Install the necessary libraries from the `requirements.txt` file.
 pip install -r requirements.txt
 ```
 **4. Install and use these LaTeX Packages**
-'''bash
+```bash
 \usepackage{tikz}                  
 \usetikzlibrary{arrows.meta,shapes}
 \usepackage{subcaption}
 \usepackage{xcolor}
 \usepackage{caption}
-'''
+```
 Make sure you are using the *lualatex* compiler in your LaTeX editor.
 
 **5. Start the Application**
