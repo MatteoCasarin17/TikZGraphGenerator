@@ -1,0 +1,133 @@
+\documentclass{article}
+
+%============== PACKAGES ==============
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{subcaption} % Required for the subfigure environment
+\usepackage{float}      % Required for the [H] placement specifier
+\usepackage{amsmath}    % For math formulas in labels
+\usepackage{amssymb}
+
+% TikZ libraries used by the application
+\usetikzlibrary{arrows.meta, shapes.geometric, positioning}
+
+% Set page geometry
+\geometry{a4paper, margin=1in}
+
+%============== TITLE ==============
+\title{\textbf{TikZ Graph Drawer Demo}}
+\author{MatteoCasarin17}
+\date{\today}
+
+
+\begin{document}
+    
+    \maketitle
+    
+    \section*{Example Graphs}
+    
+    % Custom color definitions
+    \definecolor{RossoErrore}{RGB}{253,24,19}
+    \definecolor{BluTesi}{RGB}{50,105,160}
+    \definecolor{VerdeSmeraldo}{RGB}{0,199,50}
+    % Reusable TikZ styles
+    \tikzstyle{node} = [draw, circle, minimum size=0.8cm, inner sep=0pt]
+    \tikzstyle{rectangularNode} = [draw, rectangle, minimum size=0.7cm, inner sep=2pt]
+    \tikzstyle{hexagonalNode} = [draw, regular polygon, regular polygon sides=6, minimum size=0.6cm, inner sep=1pt]
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}[t]{0.45\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=0.5]
+                % Nodes
+                \node[style=rectangularNode, text=black] (v1) at (8.680,-3.150) {$v_{1}$};
+                \node[style=node, text=black] (v2) at (19.655,-3.150) {$v_{2}$};
+                \node[style=node, text=white, fill=RossoErrore] (v3) at (8.680,-9.450) {$v_{3}$};
+                \node[style=hexagonalNode, text=white, fill=BluTesi] (v4) at (19.655,-9.450) {$v_{4}$};
+                
+                % Edges
+                \draw [] (v1) to  (v4);
+                \draw [bend left=20] (v2) to node [auto, font=\small, sloped] {{curved}} (v4);
+                \draw [] (v3) to  (v2);
+                \draw [bend right=20] (v3) to node [auto, font=\small, sloped] {{multi}} (v2);
+            \end{tikzpicture}
+            \caption{Simple Multi-Graph}
+            \label{fig:SimpleMultiGraph}
+        \end{subfigure}
+        \begin{subfigure}[t]{0.45\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=0.5]
+                % Nodes
+                \node[style=node, text=black] (v1) at (8.680,-3.150) {$v_{1}$};
+                \node[style=node, text=black] (v2) at (19.655,-3.150) {$v_{2}$};
+                \node[style=node, text=black] (v3) at (14.168,-9.450) {$v_{3}$};
+                \node[style=node, text=black] (v4) at (19.655,-6.300) {$v_{4}$};
+                \node[style=node, text=black] (v5) at (8.680,-6.300) {$v_{5}$};
+                
+                % Additional Text
+                \node[draw=none, fill=none] (t1) at (14.168,-4.725) {Text};
+                
+                % Edges
+                \draw [<-] (v5) to  (v3);
+                \draw [->] (v3) to  (v4);
+                \draw [<-,draw=RossoErrore,bend right=10] (v2) to  (v4);
+                \draw [->,draw=VerdeSmeraldo,dotted,bend left=10] (v2) to  (v4);
+                \draw [draw=VerdeSmeraldo] (v5) to  (v1);
+                \draw [->,dashed,loop above,looseness=20] (v1) to  (v1);
+                \draw [->] (v5) to  (v4);
+            \end{tikzpicture}
+            \caption{Directed Graph}
+            \label{fig:DirectedGraph}
+        \end{subfigure}
+        \begin{subfigure}[t]{0.45\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=0.5]
+                % Nodes
+                \node[style=rectangularNode, text=white, fill=RossoErrore] (v1) at (5.295,-2.560) {$v_{1}$};
+                \node[style=rectangularNode, text=white, fill=RossoErrore] (v2) at (5.295,-6.685) {$v_{2}$};
+                \node[style=rectangularNode, text=white, fill=RossoErrore] (v3) at (5.295,-10.810) {$v_{3}$};
+                \node[style=node, text=white, fill=VerdeSmeraldo] (v4) at (16.048,-2.560) {$v_{4}$};
+                \node[style=node, text=white, fill=VerdeSmeraldo] (v5) at (16.048,-6.685) {$v_{5}$};
+                \node[style=node, text=white, fill=VerdeSmeraldo] (v6) at (16.048,-10.810) {$v_{6}$};
+                
+                % Additional Text
+                \node[draw=none, fill=none] (t1) at (5.295,-13.478) {A};
+                \node[draw=none, fill=none] (t2) at (16.048,-13.340) {B};
+                
+                % Edges
+                \draw [draw=BluTesi] (v4) to  (v2);
+                \draw [draw=BluTesi] (v1) to  (v5);
+                \draw [] (v5) to  (v3);
+                \draw [] (v2) to  (v6);
+                \draw [] (v5) to  (v2);
+                \draw [] (v1) to  (v4);
+                \draw [draw=BluTesi] (v3) to  (v6);
+            \end{tikzpicture}
+            \caption{$K_{3,3}$ with a matching}
+            \label{fig:K33withamatching}
+        \end{subfigure}
+        \begin{subfigure}[t]{0.45\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=0.5]
+                
+                % Additional Text
+                \node[draw=none, fill=none] (t1) at (8.905,-3.125) {$f: \mathbb{R}$};
+                \node[draw=none, fill=none] (t2) at (19.655,-3.150) {$\mathbb{R}$};
+                \node[draw=none, fill=none] (t5) at (14.168,-10.810) {$\Omega$};
+                \node[draw=none, fill=none] (t6) at (8.680,-6.300) {$V$};
+                \node[draw=none, fill=none] (t7) at (19.655,-6.300) {$W$};
+                
+                % Edges
+                \draw [->] (t1) to node [auto, font=\small, sloped] {{$\alpha$}} (t2);
+                \draw [->] (t6) to node [auto, font=\small, sloped] {{$g$}} (t7);
+                \draw [->] (t6) to node [auto, font=\small, sloped] {{$\psi$}} (t5);
+                \draw [->] (t5) to node [auto, font=\small, sloped] {{$\phi$}} (t7);
+            \end{tikzpicture}
+            \caption{Diagram}
+            \label{fig:Diagram}
+        \end{subfigure}
+    \end{figure}
+        
+        
+    \end{document}

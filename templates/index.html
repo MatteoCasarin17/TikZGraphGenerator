@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikZ Graph Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        html, body { height: 100vh; margin: 0; font-family: 'Inter', sans-serif; overflow: hidden; }
+        body { display: flex; flex-direction: column; }
+        .main-container { flex-grow: 1; min-height: 0; }
+        .panel { @apply bg-white p-4 rounded-lg shadow-lg flex flex-col; }
+        #canvas-container { height: 100%; width: 100%; }
+        canvas { display: block; width: 100%; height: 100%; background-color: #f7fafc; cursor: default; }
+        canvas.panning { cursor: grabbing; }
+        .btn { @apply w-full text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50; }
+        .btn-primary { @apply bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 border border-blue-800; }
+        .btn-secondary { @apply bg-gray-600 hover:bg-gray-700 focus:ring-gray-500 border border-gray-800; }
+        .btn-danger { @apply bg-red-700 hover:bg-red-800 focus:ring-red-600 border border-red-900; }
+        .btn-toggle.active { @apply bg-blue-700 border-blue-900; }
+        .notification { @apply fixed bottom-5 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg transition-transform duration-300 transform translate-y-20 z-50; }
+        .notification.show { @apply translate-y-0; }
+        .input-label { @apply block text-sm font-medium text-gray-700 mb-1; }
+        .input-field { @apply block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm; }
+        .tab { @apply flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-gray-700 hover:border-gray-300 cursor-pointer whitespace-nowrap; }
+        .tab.active { @apply text-blue-600 border-blue-600 font-semibold; }
+        .key-combo { @apply font-mono bg-gray-200 text-gray-800 rounded-md px-2 py-1 text-xs; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <header class="text-center py-3 bg-white shadow-md z-10 shrink-0">
+        <h1 class="text-3xl font-bold text-gray-900">TikZ Graph Generator</h1>
+    </header>
+
+    <main class="main-container grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-5 gap-4 p-4">
+        
+        <div class="lg:col-span-1 xl:col-span-1 flex flex-col min-h-0">
+            <div class="flex-grow overflow-y-auto p-1 space-y-4">
+                <div class="panel">
+                    <h2 class="text-xl font-bold mb-3">Graph Elements</h2>
+                    <div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Vertices</h3>
+                        <div id="vertices-list" class="space-y-2"></div>
+                    </div>
+                    <hr class="my-4">
+                    <div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Edges</h3>
+                        <div id="edges-list" class="space-y-2"></div>
+                    </div>
+                    <hr class="my-4">
+                    <div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Texts</h3>
+                        <div id="texts-list" class="space-y-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 xl:col-span-3 panel p-0 overflow-hidden">
+            <div class="border-b border-gray-200 shrink-0 px-2">
+                <nav id="tabs-container" class="flex space-x-4" aria-label="Tabs"></nav>
+            </div>
+            <div class="flex-grow min-h-0" id="canvas-container">
+                <canvas id="graphCanvas"></canvas>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1 xl:col-span-1 flex flex-col min-h-0">
+            <div class="flex-grow overflow-y-auto p-1 space-y-4">
+                <div class="panel">
+                    <h2 class="text-xl font-bold mb-3">General Options</h2>
+                    <div class="space-y-2">
+                        <button id="saveProjectBtn" class="btn btn-primary">Save Project</button>
+                        <button id="loadProjectBtn" class="btn btn-secondary">Load Project</button>
+                        <button id="infoBtn" class="btn btn-secondary">Controls Info</button>
+                    </div>
+                    <input type="file" id="loadProjectInput" class="hidden" accept=".json">
+                </div>
+                <div class="panel">
+                    <h2 class="text-xl font-bold mb-3">Graph Options</h2>
+                    <div class="mb-4"><label for="graphLabel" class="input-label">Graph Caption</label><input type="text" id="graphLabel" class="input-field" placeholder="E.g.: Graph 1"></div>
+                    <div class="mb-4"><label for="scaleSlider" class="input-label flex justify-between">TikZ Scale: <span id="scaleValue">0.5</span></label><input type="range" id="scaleSlider" min="0.1" max="2.0" step="0.1" value="0.5" class="w-full"></div>
+                    <div class="space-y-2 mt-auto pt-4">
+                        <button id="addTextBtn" class="btn btn-secondary btn-toggle">Add Text</button>
+                        <button id="clearBtn" class="btn btn-danger">Clear Graph</button>
+                    </div>
+                </div>
+                <div class="panel">
+                    <h2 class="text-xl font-bold mb-3">Color Palette</h2>
+                    <div id="palette-list" class="space-y-3 mb-4"></div>
+                    <hr class="my-3">
+                    <div class="space-y-2">
+                        <h3 class="font-semibold">Add Color</h3>
+                        <input type="text" id="newColorName" class="input-field" placeholder="Color Name">
+                        <div class="flex items-center gap-2">
+                           <input type="color" id="newColorPicker" class="p-1 h-10 w-10 block bg-white border border-gray-300 rounded-lg cursor-pointer" value="#ff0000" title="Select a color">
+                           <input type="text" id="newColorRgb" class="input-field" placeholder="RGB (e.g.: 255,0,0)">
+                        </div>
+                        <button id="addColorBtn" class="btn btn-secondary text-sm py-1">Add</button>
+                    </div>
+                     <button id="savePaletteBtn" class="btn btn-secondary text-sm py-1 mt-4">Save Palette</button>
+                </div>
+                <div class="panel">
+                     <h2 class="text-xl font-bold mb-3">TikZ Output</h2>
+                    <div class="mb-4"><label for="mainGridLabel" class="input-label">Grid Caption</label><input type="text" id="mainGridLabel" class="input-field" placeholder="E.g.: Graph Examples"></div>
+                     <button id="generateGridBtn" class="btn btn-primary mb-3">Generate Code</button>
+                     <textarea id="outputArea" class="w-full bg-gray-900 text-green-400 font-mono p-2 rounded-lg border text-sm min-h-[200px]" readonly placeholder="The TikZ code will appear here..."></textarea>
+                     <button id="copyBtn" class="btn btn-secondary mt-2">Copy Code</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="infoModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Controls</h2>
+                <button id="closeInfoBtn" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex justify-between items-center"><span>Create Vertex</span> <span class="key-combo">Click</span></li>
+                <li class="flex justify-between items-center"><span>Move Element</span> <span class="key-combo">Drag</span></li>
+                <li class="flex justify-between items-center"><span>Create Edge</span> <span class="key-combo">Shift + Drag</span></li>
+                <li class="flex justify-between items-center"><span>Create Loop</span> <span class="key-combo">Shift + Double-click</span></li>
+                <hr>
+                <li class="flex justify-between items-center"><span>Pan View</span> <div><span class="key-combo">Alt + Drag</span> / <span class="key-combo">Middle-click</span></div></li>
+                <li class="flex justify-between items-center"><span>Zoom</span> <span class="key-combo">Mouse Wheel</span></li>
+                <hr>
+                 <li class="flex justify-between items-center"><span>Edit Text</span> <span class="key-combo">Double-click</span></li>
+                 <li class="flex justify-between items-center"><span>Edit Graph Name</span> <span class="key-combo">Double-click on Tab</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="notification" class="notification">Notification Text</div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
