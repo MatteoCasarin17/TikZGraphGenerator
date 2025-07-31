@@ -1,8 +1,10 @@
-Ecco l'intero contenuto del file `README.md` completo, pronto per essere copiato e incollato.
-
 # TikZ Graph Generator
 
+![Palette Editor](demo/Screenshot_Demo_UI.png)
+
 *Customizing the color palette.*
+
+![Generated Output PDF](demo/Screenshot_Demo_LaTeX.png)
 
 *Example of the generated output code.*
 
