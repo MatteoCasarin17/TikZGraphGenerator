@@ -1,44 +1,44 @@
-````markdown
+Ecco l'intero contenuto del file `README.md` completo, pronto per essere copiato e incollato.
+
 # TikZ Graph Generator
 
-![Palette Editor](demo/Screenshot_Demo_UI.png)
 *Customizing the color palette.*
 
-![Generated Output PDF](demo/Screenshot_Demo_LaTeX.png)
 *Example of the generated output code.*
 
 A simple and intuitive web application for creating graphs and automatically generating the corresponding LaTeX/TikZ code. Perfect for students, researchers, and anyone who needs to visualize graphs in their documents.
 
----
+-----
 
 ## ✨ Features
 
-* **Visual Editor:** Create, move, and delete vertices, edges, and text nodes directly on a canvas.
-* **Property Panels:** Easily modify the properties of each element (colors, labels, styles, shapes, bend, loop position, direction).
-* **Multi-Graph Management:** Work on multiple graphs simultaneously using dedicated tabs.
-* **TikZ Export:** Generate clean LaTeX code ready to be copied and pasted into your documents.
-* **Custom Color Palette:** Create, save, and use your own color palette.
-* **Save/Load Project:** Save the entire project (all graphs and the palette) to a `.json` file to resume your work later.
-* **Snap Functionality:** Smart guides for perfectly aligning nodes and text.
-* **Zoom & Pan:** Navigate the canvas easily with mouse wheel zoom and drag-to-pan.
+  * **Visual Editor:** Create, move, and delete vertices, edges, and text nodes directly on a canvas.
+  * **Property Panels:** Easily modify the properties of each element (colors, labels, styles, shapes, bend, loop position, direction).
+  * **Multi-Graph Management:** Work on multiple graphs simultaneously using dedicated tabs.
+  * **TikZ Export:** Generate clean LaTeX code ready to be copied and pasted into your documents.
+  * **Custom Color Palette:** Create, save, and use your own color palette.
+  * **Save/Load Project:** Save the entire project (all graphs and the palette) to a `.json` file to resume your work later.
+  * **Snap Functionality:** Smart guides for perfectly aligning nodes and text.
+  * **Zoom & Pan:** Navigate the canvas easily with mouse wheel zoom and drag-to-pan.
 
----
+-----
 
 ## 🚀 Installation & Usage
 
 To run the application locally, follow these steps.
 
 **Prerequisites:**
-* [Python 3.x](https://www.python.org/downloads/) installed.
-* [Git](https://git-scm.com/downloads) installed.
+
+  * [Python 3.x](https://www.python.org/downloads/) installed.
+  * [Git](https://git-scm.com/downloads) installed.
 
 **1. Clone the Repository**
 First, clone this repository to your local machine:
 
 ```bash
-git clone [https://github.com/MatteoCasarin17/TikZGraphGenerator.git](https://github.com/MatteoCasarin17/TikZGraphGenerator.git)
+git clone https://github.com/MatteoCasarin17/TikZGraphGenerator.git
 cd TikZGraphGenerator
-````
+```
 
 
 **2. Create a Virtual Environment**
