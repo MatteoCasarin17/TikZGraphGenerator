@@ -2,7 +2,7 @@
 
 ![Palette Editor](demo/Screenshot_Demo_UI.png)
 
-*Customizing the color palette.*
+*Overall UI.*
 
 ![Generated Output PDF](demo/Screenshot_Demo_LaTeX.png)
 
