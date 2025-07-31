@@ -40,7 +40,6 @@ git clone [https://github.com/MatteoCasarin17/TikZGraphGenerator.git](https://gi
 cd TikZGraphGenerator
 ````
 
-*(Replace `MatteoCasarin17` with your actual GitHub username if different, and ensure the repository name matches.)*
 
 **2. Create a Virtual Environment**
 It's good practice to use a virtual environment to isolate project dependencies.
